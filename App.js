@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import BottomNav from './src/tools/navigation_bottom';
 import Movie from './src/features/movie';
 import Player from './src/features/player';
+import MovieDownloadScreen from './src/features/movie_download';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -15,6 +16,7 @@ export default function App() {
         <Stack.Screen name="Home" component={BottomNav} />
         <Stack.Screen name="Movie" component={Movie} />
         <Stack.Screen name="Player" component={Player} />
+        <Stack.Screen name="MovieDownload" component={MovieDownloadScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

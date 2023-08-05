@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Text, ScrollView } from 'react-native';
 
 // create a component
@@ -6,9 +6,34 @@ import { Colors } from '../tools/colors';
 import SearchBar from '../components/search';
 import MoviesList from '../components/MoviesList';
 import MovieCart from '../components/MovieDownloadCart';
+import Wait from '../components/wait';
 
-const DownloadScreen = () => {
-    const [searchQuery, setSearchQuery] = useState('');
+// data
+import { addMovieToDownloadList, getDownloadListMovies, modifyDownloadStatus, removeMovieFromDownloadList } from '../tools/download';
+import { useFocusEffect } from '@react-navigation/native';
+
+const DownloadScreen = ({navigation}) => {
+    const [movies, setMovies] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+
+    const fetchMovies = async () => {
+        setLoading(true);
+        const data = await getDownloadListMovies();
+        setMovies(data);
+        console.log(data);
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        fetchMovies();
+    }, []);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchMovies();
+        }, [])
+    );
 
     return (
         <View style={styles.container}>
@@ -16,11 +41,10 @@ const DownloadScreen = () => {
             <Text style={{color: Colors.white, fontSize: 20, fontWeight: 'bold'}}>Download</Text>
             </View>
             <ScrollView vertical={true} style={{marginTop: 20}}>
-                <MovieCart />
-                <MovieCart />
-                <MovieCart />
-                <MovieCart />
-                <MovieCart />
+                {loading == true ? <Wait /> : 
+                    movies.length == 0 ? <Text style={{ color: Colors.white, fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>No movies in your watch list</Text> :
+                    movies.map(movie => <MovieCart movie={movie} navigation={navigation} />)
+                }
             </ScrollView>
         </View>
     );

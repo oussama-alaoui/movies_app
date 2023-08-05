@@ -3,8 +3,9 @@ import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '../tools/colors';
 import { Ionicons } from '@expo/vector-icons';
+import { addMovieToDownloadList, getDownloadListMovies, modifyDownloadStatus, handleDownload } from '../tools/download';
 
-const Button = ({ title, onPress, statu }) => {
+const Button = ({ title, onPress, statu, movie }) => {
     if (statu == 'watch') {
     return (
         <LinearGradient
@@ -31,7 +32,7 @@ const Button = ({ title, onPress, statu }) => {
             start={{ x: 0.0, y: 1.0 }} end={{ x: 1.0, y: 1.0 }}
             style={styles.grediant}
             >
-            <TouchableOpacity style={[styles.button, {backgroundColor: Colors.dark_blue}]} onPress={onPress}>
+            <TouchableOpacity style={[styles.button, {backgroundColor: Colors.dark_blue}]} onPress={() => handleDownload(movie)}>
                 <Ionicons name="arrow-down" size={30} color={Colors.white} style={{paddingTop: 5, paddingRight: 10}} />
                 <Text style={styles.text}>{title}</Text>
             </TouchableOpacity>

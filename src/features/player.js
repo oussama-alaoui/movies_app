@@ -68,7 +68,8 @@ const Player = ({navigation, route}) => {
                 ref={video}
                 style={styles.video}
                 source={{
-                    uri: route.params.data.movie_link.videos[0].url,
+                    uri: route.params.link ? route.params.link :
+                    route.params.data.movie_link.videos[0].url,
                 }}
                 resizeMode="cover"
                 isLooping

@@ -9,12 +9,11 @@ import MovieCart from '../components/MovieCart';
 import Wait from '../components/wait';
 
 // data
-import { addMovieToWatchlist, removeMovieFromWatchlist, isInWatchlist, getWatchlistMovies } from '../tools/localStorage';
+import { getWatchlistMovies } from '../tools/localStorage';
 
 import { useFocusEffect } from '@react-navigation/native';
 
 const WatchListScreen = ({navigation}) => {
-    const [searchQuery, setSearchQuery] = useState('');
     const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(true);
 

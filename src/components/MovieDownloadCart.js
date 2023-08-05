@@ -4,22 +4,24 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '../tools/colors';
 
-const MovieDownloadCart = ({ value, onChangeText, onClear }) => {
+const MovieDownloadCart = ({ value, onChangeText, onClear, movie, navigation }) => {
     // Assume that the download status is passed as a prop named "downloadStatus"
     const [downloadStatus, setDownloadStatus] = useState('error'); // ['pending', 'success', 'error'
 
     // Determine which icon to display based on the download status
     let icon;
-    if (downloadStatus === 'success') {
-        icon = <Ionicons name="checkmark-circle-outline" size={30} color={Colors.blue} />;
-    } else if (downloadStatus === 'error') {
-        icon = <Ionicons name="alert-circle-outline" size={30} color={Colors.red} />;
-    } else {
+    if (movie.download_status === 1) {
+        icon = <Ionicons name="checkmark-circle-outline" size={30} color={Colors.green} />;
+    } 
+    //else if (downloadStatus === 'error') {
+    //     icon = <Ionicons name="alert-circle-outline" size={30} color={Colors.red} />;
+    // } 
+    else {
         icon = <Text style={{ color: Colors.white, fontSize: 10 }}>Downloading...</Text>;
     }
 
     return (
-        <View style={styles.container}>
+        <TouchableOpacity style={styles.container} onPress={() => navigation.navigate('MovieDownload', { movie: movie })}>
             <LinearGradient
                 colors={['#00FFFF', '#17C8FF', '#329BFF', '#4C64FF', '#6536FF', '#8000FF']}
                 start={{ x: 0.0, y: 1.0 }}
@@ -37,7 +39,7 @@ const MovieDownloadCart = ({ value, onChangeText, onClear }) => {
                         borderRadius: 10,
                     }}
                 >
-                    <Image source={{ uri: 'https://i.imgur.com/3jLPB46.png' }} style={{ width: 90, height: 120, borderRadius: 10 }} />
+                    <Image source={{ uri: movie.img }} style={{ width: 90, height: 120, borderRadius: 10 }} />
                     <View
                         style={{
                             flexDirection: 'column',
@@ -50,18 +52,18 @@ const MovieDownloadCart = ({ value, onChangeText, onClear }) => {
                             paddingLeft: 20,
                         }}
                     >
-                        <Text style={{ color: Colors.white, fontSize: 20, fontWeight: 'bold', marginBottom: 20 }}>The Dark Knight</Text>
+                        <Text style={{ color: Colors.white, fontSize: 20, fontWeight: 'bold', marginBottom: 20 }}>{movie.name}</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 9 }}>
                             <Ionicons name="film-outline" size={15} color={Colors.gray} style={{ paddingRight: 5, marginTop: 4 }} />
-                            <Text style={{ color: Colors.gray, fontSize: 15 }}>Action</Text>
+                            <Text style={{ color: Colors.gray, fontSize: 15 }}>{movie.genres.join(', ')}</Text>
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 9 }}>
                             <Ionicons name="time-outline" size={15} color={Colors.gray} style={{ paddingRight: 5 }} />
-                            <Text style={{ color: Colors.gray, fontSize: 15 }}>2h 32min</Text>
+                            <Text style={{ color: Colors.gray, fontSize: 15 }}>{movie.dure}</Text>
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <Ionicons name="calendar-outline" size={15} color={Colors.gray} style={{ paddingRight: 5 }} />
-                            <Text style={{ color: Colors.gray, fontSize: 15 }}>2008</Text>
+                            <Text style={{ color: Colors.gray, fontSize: 15 }}>{movie.year}</Text>
                         </View>
                     </View>
                     {/* New column for download status */}
@@ -70,7 +72,7 @@ const MovieDownloadCart = ({ value, onChangeText, onClear }) => {
                     </View>
                 </View>
             </LinearGradient>
-        </View>
+        </TouchableOpacity>
     );
 };
 
