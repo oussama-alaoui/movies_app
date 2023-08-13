@@ -5,7 +5,7 @@ import { Colors } from '../tools/colors';
 import { Ionicons } from '@expo/vector-icons';
 import { addMovieToDownloadList, getDownloadListMovies, modifyDownloadStatus, handleDownload } from '../tools/download';
 
-const Button = ({ title, onPress, statu, movie }) => {
+const Button = ({ title, onPress, statu, movie, link }) => {
     if (statu == 'watch') {
     return (
         <LinearGradient
@@ -32,7 +32,7 @@ const Button = ({ title, onPress, statu, movie }) => {
             start={{ x: 0.0, y: 1.0 }} end={{ x: 1.0, y: 1.0 }}
             style={styles.grediant}
             >
-            <TouchableOpacity style={[styles.button, {backgroundColor: Colors.dark_blue}]} onPress={() => handleDownload(movie)}>
+            <TouchableOpacity style={[styles.button, {backgroundColor: Colors.dark_blue}]} onPress={onPress}>
                 <Ionicons name="arrow-down" size={30} color={Colors.white} style={{paddingTop: 5, paddingRight: 10}} />
                 <Text style={styles.text}>{title}</Text>
             </TouchableOpacity>

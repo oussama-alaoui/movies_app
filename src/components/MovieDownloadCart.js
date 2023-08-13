@@ -1,25 +1,52 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet, Image, Text} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '../tools/colors';
+import ProgressCircle from 'react-native-progress-circle'
+
+// data
+import { removeMovieFromDownloadList, getDownloadStatus } from '../tools/download';
+import { useFocusEffect } from '@react-navigation/native';
 
 const MovieDownloadCart = ({ value, onChangeText, onClear, movie, navigation }) => {
-    // Assume that the download status is passed as a prop named "downloadStatus"
-    const [downloadStatus, setDownloadStatus] = useState('error'); // ['pending', 'success', 'error'
 
-    // Determine which icon to display based on the download status
+    async function updateDownloadStatus (){
+        const status = await getDownloadStatus(movie.name);
+        movie.download_status = status;
+    };
+
+    
     let icon;
-    if (movie.download_status === 1) {
-        icon = <Ionicons name="checkmark-circle-outline" size={30} color={Colors.green} />;
-    } 
-    //else if (downloadStatus === 'error') {
-    //     icon = <Ionicons name="alert-circle-outline" size={30} color={Colors.red} />;
-    // } 
-    else {
-        icon = <Text style={{ color: Colors.white, fontSize: 10 }}>Downloading...</Text>;
+    function checkStatus() {
+        if (movie.download_status === 1) {
+            icon = <Ionicons name="checkmark-circle-outline" size={30} color={Colors.green} />;
+        } 
+        else if (movie.download_status === 0) {
+            icon = <Ionicons name="alert-circle-outline" size={30} color={Colors.red} />;
+        }
+        else {
+            icon = <ProgressCircle
+            percent={movie.download_status * 100}
+            radius={25}
+            borderWidth={4}
+            color={Colors.blue}
+            shadowColor="#999"
+            bgColor={Colors.dark_blue}
+            >
+            <Text style={{ fontSize: 14, color:Colors.gray }}>{Math.round(movie.download_status * 100)}%</Text>
+        </ProgressCircle>;
+        }
     }
-
+    checkStatus(); 
+    useFocusEffect(
+        React.useCallback(() => {
+            updateDownloadStatus(); 
+        }, [movie.download_status])
+    );
+    setInterval(updateDownloadStatus, 5000);
+    
+  
     return (
         <TouchableOpacity style={styles.container} onPress={() => navigation.navigate('MovieDownload', { movie: movie })}>
             <LinearGradient

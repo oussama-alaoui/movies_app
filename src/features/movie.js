@@ -7,10 +7,12 @@ import BigImageMovie from '../components/bigImageMovie';
 import Button from '../components/button';
 import CastList from '../components/cast_list';
 import Wait from '../components/wait';
+import EpisodeList from '../components/episodeList';
 // data
 import { fetchDataMovie } from '../tools/fetch_api';
 import { fetch_video_link } from '../tools/fetch_api';
 import { addMovieToWatchlist, removeMovieFromWatchlist, isInWatchlist, getWatchlistMovies } from '../tools/localStorage';
+import { addMovieToDownloadList, getDownloadListMovies, modifyDownloadStatus, handleDownload } from '../tools/download';
 
 const MovieScreen = ({ navigation, route }) => {
     const [movie, setMovie] = useState({});
@@ -18,15 +20,18 @@ const MovieScreen = ({ navigation, route }) => {
     const [loading, setLoading] = useState(true);
     const [watchlist, setWatchlist] = useState();
     
-    async function get_links() {
+    async function get_links(type, navigation) {
        const data = await fetch_video_link(movie.direct_link);
        setMovieLink(data.movie_link.videos);
+       if (type == "watch")
+           navigation.navigate('Player', {link: data.movie_link.videos[0].url});
+        if (type == "download")
+            handleDownload(movie, data.movie_link.videos[0].url);
     }
     React.useEffect(() => {
         fetchDataMovie(route.params.link).then(async data => {
-            setMovie(data.movie_info);
-            await get_links();
-            isInWatchlist(data.movie_info.name).then(result => {
+            setMovie(data.movie_info)
+            isInWatchlist(data.movie_info.name).then(async result => {
                 setWatchlist(result);
                 setLoading(false);
             });
@@ -60,8 +65,8 @@ const MovieScreen = ({ navigation, route }) => {
                         <Text style={{ color: Colors.gray, fontSize: 20, marginLeft: 5 }}>{movie.langue}</Text>
                     </View>
                 </View>
-                <Button title="Watch now" statu="watch" onPress={() => navigation.navigate('Player', { link: movie_link[0].url })} />
-                <Button title="Download" statu="download" movie={movie} />
+                <Button title="Watch now" statu="watch" onPress={() => {get_links("watch", navigation)}} />
+                <Button title="Download" statu="download" movie={movie} onPress={() => {get_links("download", navigation)}} />
                 <View style={{ flexDirection: 'row', marginTop: 30, width: '90%', marginBottom: 10, justifyContent: 'flex-end' }}>
                     <View style={{ flexDirection: 'row', marginLeft: 20 }}>
                         <Text style={{ color: Colors.white, fontSize: 20, marginRight: 5, textAlign: 'right' }}>قصة الفيلم</Text>
@@ -76,6 +81,13 @@ const MovieScreen = ({ navigation, route }) => {
                     <Text style={{ color: Colors.blue, fontSize: 14, marginLeft: 2, textAlign: 'right' }}>|</Text>
                 </View>
                 <CastList casts={movie.cast} />
+                <View style={{ flexDirection: 'row', marginTop: 30, width: '90%', marginBottom: 10, justifyContent: 'flex-end' }}>
+                    <View style={{ flexDirection: 'row', marginLeft: 20 }}>
+                        <Text style={{ color: Colors.white, fontSize: 20, marginRight: 5, textAlign: 'right' }}>فريق العمل</Text>
+                    </View>
+                    <Text style={{ color: Colors.blue, fontSize: 14, marginLeft: 2, textAlign: 'right' }}>|</Text>
+                </View>
+                <EpisodeList />
                 </View>
                 )}
             </View>

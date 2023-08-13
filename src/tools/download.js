@@ -22,6 +22,38 @@ async function getDownloadListMovies() {
   }
 }
 
+// Remove all movies from the download list in local storage
+async function removeAllMoviesFromDownloadList() {
+  try {
+    await AsyncStorage.removeItem('downloadList');
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Get a movie from the download list from local storage
+async function getDownloadListMovie(movieName) {
+  try {
+    let downloadList = JSON.parse(await AsyncStorage.getItem('downloadList')) || [];
+    return downloadList.find(movie => movie.name === movieName);
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+// Get the download status of a movie in the download list
+async function getDownloadStatus(movieName) {
+  try {
+    let downloadList = JSON.parse(await AsyncStorage.getItem('downloadList')) || [];
+    let movie = downloadList.find(movie => movie.name === movieName);
+    return movie.download_status;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
 // Modify the download status of a movie in the download list
 async function modifyDownloadStatus(movieName, status) {
   try {
@@ -45,12 +77,10 @@ async function removeMovieFromDownloadList(movieName) {
   }
 }
 
-async function handleDownload (movie){
+async function handleDownload (movie, link){
   const downloadDir = FileSystem.documentDirectory;
-  const movieUrl = "https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4";
-  const fileUri = `${downloadDir}${movieUrl.split('/').pop()}`;
+  const fileUri = `${downloadDir}${link.split('/').pop()}`;
   try {
-      var img = movie.img;
       var movie = {
         name: movie.name,
         img: movie.imgSrc,
@@ -61,10 +91,11 @@ async function handleDownload (movie){
         genres: movie.genres,
         description: movie.description,
         cast: movie.cast,
+        download_status: 0,
       };
       addMovieToDownloadList(movie);
       const downloadResumable = FileSystem.createDownloadResumable(
-        movieUrl,
+        link,
         fileUri,
         {},
         (downloadProgress) => {
@@ -86,5 +117,8 @@ module.exports = {
   getDownloadListMovies,
   modifyDownloadStatus,
   handleDownload,
-  removeMovieFromDownloadList
+  removeMovieFromDownloadList,
+  getDownloadListMovie,
+  getDownloadStatus,
+  removeAllMoviesFromDownloadList,
 };

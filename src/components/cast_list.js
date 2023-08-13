@@ -7,8 +7,8 @@ const CastList = ({ casts }) => {
     return (
         <View style={styles.container}>
             <ScrollView horizontal={true}>
-                {casts.map(movie => (
-                    <View key={movie.title} style={styles.movieContainer}>
+                {casts.map((movie, index) => (
+                    <View key={index} style={styles.movieContainer}>
                         <LinearGradient
                         colors={['#65c7d8', '#80D2EC','#CD7FE4']}
                         start={{ x: 0.0, y: 1.0 }} end={{ x: 1.0, y: 1.0 }}

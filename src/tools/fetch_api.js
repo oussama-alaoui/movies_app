@@ -2,9 +2,14 @@
  * Fetches data from an API and returns it.
  * @returns {Promise} A Promise that resolves with the data from the API.
  */
-function fetchData(page) {
+function fetchData(page, type) {
     console.log('page', page);
-    return fetch('https://rich-pear-caterpillar-hat.cyclic.app//movies/' + page)
+    if (type === 'movies') {
+        var url = 'https://rich-pear-caterpillar-hat.cyclic.app//movies/' + page + '/' + type;
+    } else {
+        var url = 'https://rich-pear-caterpillar-hat.cyclic.app//movies/' + page + '/' + type;
+    }
+    return fetch(url)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -28,7 +33,7 @@ function fetchDataMovie(url) {
     console.log('url', url);
     const name = url.split('/')[5];
     const code = url.split('/')[4];
-    url = 'https://rich-pear-caterpillar-hat.cyclic.app//movies/' + code + '/' + name;
+    url = 'https://rich-pear-caterpillar-hat.cyclic.app//movie/' + code + '/' + name;
     return fetch(url)
         .then(response => {
             if (!response.ok) {
