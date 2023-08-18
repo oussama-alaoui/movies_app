@@ -41,7 +41,7 @@ const EpisodeList = () => {
   return (
     <View style={{ flex: 1, width:"100%" }}>
         <ScrollView style={{ width:"100%"}}>
-            <View style={{ alignItems: "end", flexDirection: 'row', padding: 10, width: '90%', justifyContent: 'space-between' }}>
+            <View style={{ alignItems: "end", flexDirection: 'row-reverse', padding: 10, width: '90%', justifyContent: 'space-between' }}>
               <LinearGradient
                 colors={['#00FFFF', '#17C8FF', '#329BFF', '#4C64FF', '#6536FF', '#8000FF']}
                 start={{ x: 0.0, y: 1.0 }} end={{ x: 1.0, y: 1.0 }}
